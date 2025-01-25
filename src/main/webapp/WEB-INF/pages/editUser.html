@@ -2,18 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Edit User</title>
+  <title>Edit</title>
 </head>
 <body>
 <h1>Edit User</h1>
-<form th:action="@{/api/user/update}" method="post">
+<form th:action="@{/api/user/update}" method="post" id="editUserForm">
   <input type="hidden" name="id" th:value="${user.id}">
+
   <label for="name">Name:</label>
-  <input type="text" id="name" name="name" th:value="${user.name}" required>
+  <input type="text" id="name" name="name" th:value="${user.name}" required pattern="[a-zA-Z]+" title="Only letters are allowed">
+  <span class="error" style="color: red;" id="nameError"></span>
+
   <label for="lastName">Last Name:</label>
-  <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" required>
+  <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" required pattern="[a-zA-Z]+" title="Only letters are allowed">
+  <span class="error" style="color: red;" id="lastNameError"></span>
+
   <button type="submit">Update</button>
 </form>
 <button onclick="window.location.href='@{/api/users/view}'">Cancel</button>
+
+<script>
+  document.getElementById("editUserForm").addEventListener("submit", function (event) {
+    let valid = true;
+
+    const nameField = document.getElementById("name");
+    const nameError = document.getElementById("nameError");
+    if (!nameField.value.match(/^[a-zA-Z]+$/)) {
+      valid = false;
+      nameError.textContent = "only letters, not numbers";
+    } else {
+      nameError.textContent = "";
+    }
+
+    const lastNameField = document.getElementById("lastName");
+    const lastNameError = document.getElementById("lastNameError");
+    if (!lastNameField.value.match(/^[a-zA-Z]+$/)) {
+      valid = false;
+      lastNameError.textContent = "only letters, not numbers";
+    } else {
+      lastNameError.textContent = "";
+    }
+
+    if (!valid) {
+      event.preventDefault();
+    }
+  });
+</script>
 </body>
 </html>

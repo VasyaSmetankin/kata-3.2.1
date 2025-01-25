@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Users</title>
@@ -22,12 +22,10 @@
     <td th:text="${user.name}"></td>
     <td th:text="${user.lastName}"></td>
     <td>
-
       <form th:action="@{/api/user/delete}" method="post" style="display:inline;">
         <input type="hidden" name="id" th:value="${user.id}">
         <button type="submit">Delete</button>
       </form>
-
       <form th:action="@{/api/user/edit}" method="get" style="display:inline;">
         <input type="hidden" name="id" th:value="${user.id}">
         <button type="submit">Edit</button>
@@ -37,13 +35,45 @@
   </tbody>
 </table>
 
-<h2>Add New User</h2>
-<form th:action="@{/api/user}" method="post">
+<h2>New User</h2>
+<form th:action="@{/api/user}" method="post" id="addUserForm">
   <label for="name">Name:</label>
-  <input type="text" id="name" name="name" required>
+  <input type="text" id="name" name="name" required pattern="[a-zA-Z]+" title="Only letters are allowed">
+  <span class="error" style="color: red;" id="nameError"></span>
+
   <label for="lastName">Last Name:</label>
-  <input type="text" id="lastName" name="lastName" required>
+  <input type="text" id="lastName" name="lastName" required pattern="[a-zA-Z]+" title="Only letters are allowed">
+  <span class="error" style="color: red;" id="lastNameError"></span>
+
   <button type="submit">Add</button>
 </form>
+
+<script>
+  document.getElementById("addUserForm").addEventListener("submit", function (event) {
+    let valid = true;
+    
+    const nameField = document.getElementById("name");
+    const nameError = document.getElementById("nameError");
+    if (!nameField.value.match(/^[a-zA-Z]+$/)) {
+      valid = false;
+      nameError.textContent = "only letters, not numbers";
+    } else {
+      nameError.textContent = "";
+    }
+    
+    const lastNameField = document.getElementById("lastName");
+    const lastNameError = document.getElementById("lastNameError");
+    if (!lastNameField.value.match(/^[a-zA-Z]+$/)) {
+      valid = false;
+      lastNameError.textContent = "only letters, not numbers";
+    } else {
+      lastNameError.textContent = "";
+    }
+
+    if (!valid) {
+      event.preventDefault(); 
+    }
+  });
+</script>
 </body>
 </html>
